@@ -59,7 +59,7 @@ func GetChannelExpensesStatisticsByPeriod(startTime, endTime, groupType string, 
 	if common.UsingPostgreSQL {
 		dateStr = "TO_CHAR(date, 'YYYY-MM-DD') as date"
 	} else if common.UsingSQLite {
-		dateStr = "strftime('%Y-%m-%d', date) as date"
+		dateStr = "strftime('%%Y-%%m-%%d', date) as date"
 	}
 
 	baseSelect := `
@@ -90,7 +90,7 @@ func GetChannelExpensesStatisticsByPeriod(startTime, endTime, groupType string, 
 
 	} else {
 		sql = baseSelect + `
-            channels.name as channel
+            MAX(channels.name) as channel
             FROM statistics
             JOIN channels ON statistics.channel_id = channels.id
             %s
